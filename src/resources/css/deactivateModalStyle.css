@@ -1,0 +1,169 @@
+.bitapps-dm-wrapper {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 70%);
+  z-index: 99999;
+  display: none;
+}
+
+.bitapps-dm-dialog {
+  width: 550px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999999;
+  background-color: #fff;
+  border-radius: 12px;
+  font-size: 0.875rem;
+}
+
+.bitapps-dm-feedback-text {
+  margin-block-start: 5px;
+  grid-area: reason;
+}
+
+input.bitapps-dm-feedback-text {
+  padding: 4px 11px;
+  color: rgba(0, 0, 0, 88%);
+  line-height: 1.57;
+  width: 100%;
+  min-width: 0;
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+div.bitapps-dm-feedback-text {
+  color: rgb(255, 153, 0);
+}
+
+.bitapps-dm-input-wrapper {
+  display: grid;
+  align-items: top;
+  column-gap: 10px;
+  grid-template:
+    'radio label' auto
+    'radio reason' auto / auto 1fr;
+}
+
+.bitapps-dm-input-wrapper + .bitapps-dm-input-wrapper {
+  margin-top: 10px;
+}
+
+.bitapps-dm-input {
+  margin-top: 2px !important;
+  grid-area: radio;
+}
+
+.bitapps-dm-input:not(:checked) ~ .bitapps-dm-feedback-text {
+  display: none;
+}
+
+.bitapps-dm-label {
+  grid-area: label;
+}
+
+.bitapps-dm-header {
+  border-bottom: 1px solid #d9d9d9;
+  padding: 10px 24px;
+  text-align: start;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.bitapps-dm-close-svg {
+  box-sizing: border-box;
+  height: 30px;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 8px;
+  border-radius: 50%;
+  background: #f3f3f3;
+  flex-shrink: 0;
+}
+
+.bitapps-dm-close-svg:hover {
+  background: #ecebeb;
+}
+
+.bitapps-dm-form {
+  padding: 20px 24px;
+}
+
+.bitapps-dm-form-footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px;
+}
+
+.bitapps-dm-header-title {
+  text-transform: uppercase;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.bitapps-dm-form-caption {
+  margin-bottom: 20px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.bitapps-dm-form-footer button {
+  padding: 4px 15px;
+  border-radius: 8px;
+  box-shadow: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  height: 32px;
+  color: rgba(0, 0, 0, 88%);
+}
+
+button.bitapps-dm-form-submit {
+  background: #1c1c1c;
+  color: #fff;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.bitapps-dm-loading::after {
+  content: '';
+  opacity: 1;
+  border-top: 0.1563rem solid #a3a3a3;
+  border-right: 0.1563rem solid #a3a3a3;
+  border-bottom: 0.1563rem solid #a3a3a3;
+  border-left: 0.1563rem solid #1c1c1c;
+  border-radius: 50%;
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-left: 6px;
+  transform: translateZ(0);
+  animation: bitapps-dm-loader 1.1s infinite linear;
+}
+
+@keyframes bitapps-dm-loader {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+button.bitapps-dm-form-submit:hover {
+  background: #1c1c1c;
+}
+
+button.bitapps-dm-form-skip {
+  background: transparent;
+}
+
+button.bitapps-dm-form-skip:hover {
+  background-color: #efefef;
+}

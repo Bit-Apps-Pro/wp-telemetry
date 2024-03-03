@@ -1,0 +1,58 @@
+{
+  "name": "bitapps/wp-telemetry",
+  "description": "Collect diagnostic data and deactivation reason for a WordPress plugin",
+  "type": "library",
+  "homepage": "https://bitapps.pro",
+  "license": "GPL-2.0-or-later",
+  "version": "0.0.1",
+  "keywords": [
+    "diagnostic",
+    "data",
+    "collect",
+    "deactivation",
+    "reason"
+  ],
+  "support": {
+    "issues": "https://github.com/Bit-Apps-Pro/wp-telemetry/issues",
+    "source": "https://github.com/Bit-Apps-Pro/wp-telemetry"
+  },
+  "authors": [
+    {
+      "email": "developer@bitcode.pro",
+      "name": "BitApps"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "BitApps\\WPTelemetry\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "BitApps\\WPTelemetry\\Tests\\": [
+        "tests/"
+      ]
+    }
+  },
+  "scripts": {
+    "test:unit": "./vendor/bin/pest --testdox --colors=always tests/ --exclude-group db",
+    "compat": "./vendor/bin/phpcs  -p ./src --standard=PHPCompatibility --runtime-set testVersion 5.6-",
+    "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility",
+    "post-update-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility"
+  },
+  "require": {
+    "php": ">=5.6"
+  },
+  "require-dev": {
+    "pestphp/pest": "3.x-dev",
+    "squizlabs/php_codesniffer": "*",
+    "phpcompatibility/php-compatibility": "*"
+  },
+  "minimum-stability": "dev",
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}
