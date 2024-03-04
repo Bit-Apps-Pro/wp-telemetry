@@ -19,8 +19,6 @@ class Client
 
     public $version;
 
-    public $logo;
-
     public $telemetryVersion = '0.1.0';
 
     public $termsUrl = 'https://bitapps.pro/terms';
@@ -56,11 +54,6 @@ class Client
         }
 
         return $this->feedback;
-    }
-
-    public function setLogo($logo)
-    {
-        $this->logo = $logo;
     }
 
     public function setTermsUrl($url)

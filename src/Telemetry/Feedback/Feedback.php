@@ -65,7 +65,6 @@ class Feedback
             'slug'    => $this->client->slug,
             'prefix'  => $this->client->prefix,
             'title'   => $this->client->title,
-            'logo'    => $this->client->logo,
             'reasons' => $this->getDeactivateReasons(),
         ]);
     }
@@ -78,7 +77,7 @@ class Feedback
                 'placeholder' => esc_html__('Which plugin?', $this->client->slug),
             ],
             'missing_specific_feature' => [
-                'title'       => esc_html__('Missing a specific featureMissing a specific featureMissing a specific feature featureMissing a specific feature', $this->client->slug),
+                'title'       => esc_html__('Missing a specific feature', $this->client->slug),
                 'placeholder' => esc_html__('Could you tell us more about that feature?', $this->client->slug),
             ],
             'not_working' => [

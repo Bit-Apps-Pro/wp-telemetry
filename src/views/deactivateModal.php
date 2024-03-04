@@ -1,7 +1,6 @@
 <div class="bitapps-dm-wrapper" id="<?php echo esc_attr($args['slug']); ?>-bitapps-dm-wrapper">
   <div class="bitapps-dm-dialog">
     <div class="bitapps-dm-header">
-      <?php echo esc_attr($args['logo']); ?>
       <span class="bitapps-dm-header-title">
         <?php echo esc_html__('Quick Feedback', esc_attr($args['slug'])); ?>
       </span>
