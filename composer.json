@@ -4,13 +4,10 @@
   "type": "library",
   "homepage": "https://bitapps.pro",
   "license": "GPL-2.0-or-later",
-  "version": "0.0.2",
   "keywords": [
-    "diagnostic",
-    "data",
-    "collect",
-    "deactivation",
-    "reason"
+    "wp",
+    "WordPress",
+    "Telemetry"
   ],
   "support": {
     "issues": "https://github.com/Bit-Apps-Pro/wp-telemetry/issues",
