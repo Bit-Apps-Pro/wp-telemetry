@@ -4,7 +4,7 @@ A simple telemetry library for WordPress.It allows you to send telemetry data to
 
 ## Usage
 
-### 1. Install the Package
+### 1. Installation
 
 Install the package using composer:
 
@@ -32,40 +32,39 @@ function initialize_telemetry_client() {
 initialize_telemetry_client();
 ```
 
+You are good to go! The telemetry client will start sending data to the default server.
+
 ## Configuration
 
-### # Client
+All the configuration should be done in the `initialize_telemetry_client()` function.
 
-Config the server URL
+### # Telemetry Client Config
+
+Set custom server URL
 
 ```php
 $telemetryClient->setServerUrl( 'https://example.com' );
 ```
 
-Config the terms URL
+Set custom terms URL
 
 ```php
 $telemetryClient->setTermsUrl( 'https://example.com/terms' );
 ```
 
-Config the privacy policy URL
+Set custom privacy policy URL
 
 ```php
 $telemetryClient->setPolicyUrl( 'https://example.com/privacy' );
 ```
 
-Config the plugin logo
-
-```php
-$telemetryClient->setLogo( 'https://example.com/logo.svg' );
-```
-
-### # Report
+### # Tracking Report Config
 
 Add plugin information in tracking data
 
 ```php
-$telemetryClient->report()->addPluginData();
+$telemetryClient->report()
+                ->addPluginData();
 ```
 
 Add extra information in tracking data
@@ -77,7 +76,7 @@ $telemetryClient->report()
                 ]);
 ```
 
-### # Feedback
+### # Deactivate Feedback Config
 
 You can customize the feedback survey by adding questions using `add_filter()`
 
