@@ -1,6 +1,6 @@
 # WP Telemetry
 
-A simple telemetry library for WordPress.It allows you to send telemetry data to a remote server. It is designed to be simple and easy to use.
+A simple telemetry library for WordPress. It allows you to send telemetry data to a remote server. It is designed to be simple and easy to use.
 
 ## Usage
 

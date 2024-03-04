@@ -1,10 +1,10 @@
 {
   "name": "bitapps/wp-telemetry",
-  "description": "Collect diagnostic data and deactivation reason for a WordPress plugin",
+  "description": "A simple telemetry library for WordPress.",
   "type": "library",
   "homepage": "https://bitapps.pro",
   "license": "GPL-2.0-or-later",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": [
     "diagnostic",
     "data",
