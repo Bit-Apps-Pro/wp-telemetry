@@ -17,16 +17,17 @@ composer require bitapps/wp-telemetry
 Initialize the telemetry client in your plugin.
 
 ```php
-use BitApps\Telemetry\Telemetry;
-
 function initialize_telemetry_client() {
-  $telemetryClient = new Client( $name, $slug, $prefix, $version );
+  TelemetryConfig::setSlug($title);
+  TelemetryConfig::setTitle($slug);
+  TelemetryConfig::setPrefix($prefix);
+  TelemetryConfig::setVersion($version);
 
   // initialize tracking and reporting
-  $telemetryClient->report();
+  Telemetry::report()->init();
 
   // initialize deactivation feedback survey
-  $telemetryClient->feedback();
+  Telemetry::feedback()->init();
 }
 
 initialize_telemetry_client();
@@ -43,19 +44,19 @@ All the configuration should be done in the `initialize_telemetry_client()` func
 Set custom server URL
 
 ```php
-$telemetryClient->setServerUrl( 'https://example.com' );
+TelemetryConfig::setServerBaseUrl( 'https://example.com' );
 ```
 
 Set custom terms URL
 
 ```php
-$telemetryClient->setTermsUrl( 'https://example.com/terms' );
+TelemetryConfig::setTermsUrl( 'https://example.com/terms' );
 ```
 
 Set custom privacy policy URL
 
 ```php
-$telemetryClient->setPolicyUrl( 'https://example.com/privacy' );
+TelemetryConfig::setPolicyUrl( 'https://example.com/privacy' );
 ```
 
 ### # Tracking Report Config
@@ -63,17 +64,19 @@ $telemetryClient->setPolicyUrl( 'https://example.com/privacy' );
 Add plugin information in tracking data
 
 ```php
-$telemetryClient->report()
-                ->addPluginData();
+TelemetryConfig::report()
+                ->addPluginData()
+                ->init();
 ```
 
 Add extra information in tracking data
 
 ```php
-$telemetryClient->report()
+TelemetryConfig::report()
                 ->addExtraInfo([
                   'my_plugin_logs' => Log::get(),
-                ]);
+                ])
+                ->init();
 ```
 
 ### # Deactivate Feedback Config

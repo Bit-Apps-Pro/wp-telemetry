@@ -124,7 +124,7 @@ class ReportInfo
 
         $serverData['php_max_upload_size'] = size_format(wp_max_upload_size());
         $serverData['php_default_timezone'] = date_default_timezone_get();
-        $serverData['php_soap'] = class_exists('SoapClient') ? 'Yes' : 'No';
+        $serverData['php_soap'] = class_exists('SoapTelemetryConfig') ? 'Yes' : 'No';
         $serverData['php_fsockopen'] = \function_exists('fsockopen') ? 'Yes' : 'No';
         $serverData['php_curl'] = \function_exists('curl_init') ? 'Yes' : 'No';
 
@@ -209,7 +209,7 @@ class ReportInfo
     /**
      * Get plugin info
      *
-     * @param mixed $activePlugins
+     * @param mixed  $activePlugins
      * @param string $slug
      *
      * @return array

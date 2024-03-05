@@ -2,30 +2,22 @@
 
 namespace BitApps\WPTelemetry\Telemetry\Report;
 
-use BitApps\WPTelemetry\Telemetry\Client;
+use BitApps\WPTelemetry\Telemetry\Telemetry;
+use BitApps\WPTelemetry\Telemetry\TelemetryConfig;
 
 class Report
 {
-    private $addPluginData = false;
-
     private $extraInfo = [];
 
-    private $client;
-
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-
-        $this->init();
-    }
+    private $addPluginData = false;
 
     public function init()
     {
         $this->initCommonHooks();
 
-        add_action($this->client->prefix . 'activate', [$this, 'activatePlugin']);
+        add_action(TelemetryConfig::getPrefix() . 'activate', [$this, 'activatePlugin']);
 
-        add_action($this->client->prefix . 'deactivate', [$this, 'deactivatePlugin']);
+        add_action(TelemetryConfig::getPrefix() . 'deactivate', [$this, 'deactivatePlugin']);
     }
 
     public function addPluginData()
@@ -52,7 +44,7 @@ class Report
 
         add_filter('cron_schedules', [$this, 'addWeeklySchedule']);
 
-        add_action($this->client->prefix . 'send_tracking_event', [$this, 'sendTrackingReport']);
+        add_action(TelemetryConfig::getPrefix() . 'send_tracking_event', [$this, 'sendTrackingReport']);
     }
 
     public function adminNotice()
@@ -61,13 +53,13 @@ class Report
             return;
         }
 
-        $this->client->view('reportOptIn', [
-            'termsUrl'    => $this->client->termsUrl,
-            'policyUrl'   => $this->client->policyUrl,
-            'optInUrl'    => wp_nonce_url(add_query_arg($this->client->prefix . 'tracking_opt_in', 'true'), '_wpnonce'),
-            'optOutUrl'   => wp_nonce_url(add_query_arg($this->client->prefix . 'tracking_opt_out', 'true'), '_wpnonce'),
-            'prefix'      => $this->client->prefix,
-            'title'       => $this->client->title,
+        Telemetry::view('reportOptIn', [
+            'termsUrl'    => TelemetryConfig::getTermsUrl(),
+            'policyUrl'   => TelemetryConfig::getPolicyUrl(),
+            'optInUrl'    => wp_nonce_url(add_query_arg(TelemetryConfig::getPrefix() . 'tracking_opt_in', 'true'), '_wpnonce'),
+            'optOutUrl'   => wp_nonce_url(add_query_arg(TelemetryConfig::getPrefix() . 'tracking_opt_out', 'true'), '_wpnonce'),
+            'prefix'      => TelemetryConfig::getPrefix(),
+            'title'       => TelemetryConfig::getTitle(),
             'description' => $this->getDescription()
             // 'dataWeCollect' => implode(', ', $this->dataWeCollect()),
         ]);
@@ -85,8 +77,8 @@ class Report
                 '%3$s'
             ),
             wp_get_current_user()->display_name,
-            $this->client->title,
-            $this->client->slug,
+            TelemetryConfig::getTitle(),
+            TelemetryConfig::getSlug(),
         );
     }
 
@@ -100,41 +92,41 @@ class Report
             return;
         }
 
-        if (isset($_GET[$this->client->prefix . 'tracking_opt_in']) && $_GET[$this->client->prefix . 'tracking_opt_in'] === 'true') {
+        if (isset($_GET[TelemetryConfig::getPrefix() . 'tracking_opt_in']) && $_GET[TelemetryConfig::getPrefix() . 'tracking_opt_in'] === 'true') {
             $this->trackingOptIn();
-            wp_safe_redirect(remove_query_arg($this->client->prefix . 'tracking_opt_in'));
+            wp_safe_redirect(remove_query_arg(TelemetryConfig::getPrefix() . 'tracking_opt_in'));
             exit;
         }
 
-        if (isset($_GET[$this->client->prefix . 'tracking_opt_out'], $_GET[$this->client->prefix . 'tracking_opt_out']) && $_GET[$this->client->prefix . 'tracking_opt_out'] === 'true') {
+        if (isset($_GET[TelemetryConfig::getPrefix() . 'tracking_opt_out'], $_GET[TelemetryConfig::getPrefix() . 'tracking_opt_out']) && $_GET[TelemetryConfig::getPrefix() . 'tracking_opt_out'] === 'true') {
             $this->trackingOptOut();
-            wp_safe_redirect(remove_query_arg($this->client->prefix . 'tracking_opt_out'));
+            wp_safe_redirect(remove_query_arg(TelemetryConfig::getPrefix() . 'tracking_opt_out'));
             exit;
         }
     }
 
     public function trackingOptIn()
     {
-        update_option($this->client->prefix . 'allow_tracking', true);
-        update_option($this->client->prefix . 'tracking_notice_dismissed', true);
+        update_option(TelemetryConfig::getPrefix() . 'allow_tracking', true);
+        update_option(TelemetryConfig::getPrefix() . 'tracking_notice_dismissed', true);
 
         $this->clearScheduleEvent();
         $this->scheduleEvent();
         $this->sendTrackingReport();
 
-        do_action($this->client->prefix . 'tracking_opt_in', $this->getTrackingData());
+        do_action(TelemetryConfig::getPrefix() . 'tracking_opt_in', $this->getTrackingData());
     }
 
     public function trackingOptOut()
     {
-        update_option($this->client->prefix . 'allow_tracking', false);
-        update_option($this->client->prefix . 'tracking_notice_dismissed', true);
+        update_option(TelemetryConfig::getPrefix() . 'allow_tracking', false);
+        update_option(TelemetryConfig::getPrefix() . 'tracking_notice_dismissed', true);
 
         $this->trackingSkippedRequest();
 
         $this->clearScheduleEvent();
 
-        do_action($this->client->prefix . 'tracking_opt_out');
+        do_action(TelemetryConfig::getPrefix() . 'tracking_opt_out');
     }
 
     public function addWeeklySchedule($schedules)
@@ -162,17 +154,17 @@ class Report
     {
         $this->clearScheduleEvent();
 
-        delete_option($this->client->prefix . 'tracking_notice_dismissed');
+        delete_option(TelemetryConfig::getPrefix() . 'tracking_notice_dismissed');
     }
 
     public function isTrackingAllowed()
     {
-        return get_option($this->client->prefix . 'allow_tracking');
+        return get_option(TelemetryConfig::getPrefix() . 'allow_tracking');
     }
 
     public function isTrackingNoticeDismissed()
     {
-        return get_option($this->client->prefix . 'tracking_notice_dismissed');
+        return get_option(TelemetryConfig::getPrefix() . 'tracking_notice_dismissed');
     }
 
     public function sendTrackingReport()
@@ -183,7 +175,7 @@ class Report
 
         $trackingData = $this->getTrackingData();
 
-        $this->client->sendReport('plugin-track-create', $trackingData);
+        Telemetry::sendReport('plugin-track-create', $trackingData);
 
         $this->updateLastSendedAt();
     }
@@ -208,26 +200,26 @@ class Report
             'active_plugins'   => \count($allPlugins['activePlugins']),
             'inactive_plugins' => \count($allPlugins['inactivePlugins']),
             'ip_address'       => $reportInfo->getUserIpAddress(),
-            'plugin_slug'      => $this->client->prefix,
-            'plugin_version'   => $this->client->version,
+            'plugin_slug'      => TelemetryConfig::getPrefix(),
+            'plugin_version'   => TelemetryConfig::getversion(),
             'is_local'         => $reportInfo->isLocalServer(),
             'skipped'          => false
         ];
 
         if ($this->addPluginData) {
-            $data['plugins'] = $reportInfo->getPluginInfo($allPlugins['activePlugins'], $this->client->slug);
+            $data['plugins'] = $reportInfo->getPluginInfo($allPlugins['activePlugins'], TelemetryConfig::getSlug());
         }
 
         if (\is_array($this->extraInfo) && !empty($this->extraInfo)) {
             $data['extra'] = $this->extraInfo;
         }
 
-        if (get_option($this->client->prefix . 'tracking_skipped')) {
-            delete_option($this->client->prefix . 'tracking_skipped');
+        if (get_option(TelemetryConfig::getPrefix() . 'tracking_skipped')) {
+            delete_option(TelemetryConfig::getPrefix() . 'tracking_skipped');
             $data['previously_skipped'] = true;
         }
 
-        return apply_filters($this->client->prefix . 'tracker_data', $data);
+        return apply_filters(TelemetryConfig::getPrefix() . 'tracker_data', $data);
     }
 
     protected function dataWeCollect()
@@ -250,10 +242,10 @@ class Report
 
     private function trackingSkippedRequest()
     {
-        $previouslySkipped = get_option($this->client->prefix . 'tracking_skipped');
+        $previouslySkipped = get_option(TelemetryConfig::getPrefix() . 'tracking_skipped');
 
         if (!$previouslySkipped) {
-            update_option($this->client->prefix . 'tracking_skipped', true);
+            update_option(TelemetryConfig::getPrefix() . 'tracking_skipped', true);
         }
 
         $data = [
@@ -261,12 +253,12 @@ class Report
             'previously_skipped' => $previouslySkipped,
         ];
 
-        $this->client->sendReport('plugin-track-create', $data);
+        Telemetry::sendReport('plugin-track-create', $data);
     }
 
     private function scheduleEvent()
     {
-        $hook_name = $this->client->prefix . 'send_tracking_event';
+        $hook_name = TelemetryConfig::getPrefix() . 'send_tracking_event';
 
         if (!wp_next_scheduled($hook_name)) {
             wp_schedule_event(time(), 'weekly', $hook_name);
@@ -275,7 +267,7 @@ class Report
 
     private function clearScheduleEvent()
     {
-        return wp_clear_scheduled_hook($this->client->prefix . 'send_tracking_event');
+        return wp_clear_scheduled_hook(TelemetryConfig::getPrefix() . 'send_tracking_event');
     }
 
     private function isSendedWithinWeek()
@@ -287,11 +279,11 @@ class Report
 
     private function lastSendedAt()
     {
-        return get_option($this->client->prefix . 'tracking_last_sended_at');
+        return get_option(TelemetryConfig::getPrefix() . 'tracking_last_sended_at');
     }
 
     private function updateLastSendedAt()
     {
-        return update_option($this->client->prefix . 'tracking_last_sended_at', time());
+        return update_option(TelemetryConfig::getPrefix() . 'tracking_last_sended_at', time());
     }
 }

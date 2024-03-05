@@ -2,22 +2,14 @@
 
 namespace BitApps\WPTelemetry\Telemetry\Feedback;
 
-use BitApps\WPTelemetry\Telemetry\Client;
+use BitApps\WPTelemetry\Telemetry\Telemetry;
+use BitApps\WPTelemetry\Telemetry\TelemetryConfig;
 
 class Feedback
 {
-    private $client;
-
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-
-        $this->init();
-    }
-
     public function init()
     {
-        add_action('wp_ajax_' . $this->client->prefix . 'deactivate_feedback', [$this, 'handleDeactivateFeedback']);
+        add_action('wp_ajax_' . TelemetryConfig::getPrefix() . 'deactivate_feedback', [$this, 'handleDeactivateFeedback']);
 
         add_action('current_screen', [$this, 'loadAllScripts']);
     }
@@ -43,8 +35,8 @@ class Feedback
         add_action('admin_footer', [$this, 'printDeactivateFeedbackDialog']);
 
         $cssFilePath = $this->getAssetPath() . 'resources/css/deactivateModalStyle.css';
-        wp_register_style($this->client->prefix . 'deactivate_modal', $cssFilePath, [], $this->client->version);
-        wp_enqueue_style($this->client->prefix . 'deactivate_modal');
+        wp_register_style(TelemetryConfig::getPrefix() . 'deactivate_modal', $cssFilePath, [], TelemetryConfig::getVersion());
+        wp_enqueue_style(TelemetryConfig::getPrefix() . 'deactivate_modal');
     }
 
     public static function getAssetPath()
@@ -61,10 +53,10 @@ class Feedback
      */
     public function printDeactivateFeedbackDialog()
     {
-        $this->client->view('deactivateModal', [
-            'slug'    => $this->client->slug,
-            'prefix'  => $this->client->prefix,
-            'title'   => $this->client->title,
+        Telemetry::view('deactivateModal', [
+            'slug'    => TelemetryConfig::getSlug(),
+            'prefix'  => TelemetryConfig::getPrefix(),
+            'title'   => TelemetryConfig::getTitle(),
             'reasons' => $this->getDeactivateReasons(),
         ]);
     }
@@ -73,37 +65,37 @@ class Feedback
     {
         $reasons = [
             'found_a_better_plugin' => [
-                'title'       => esc_html__('Found a better plugin', $this->client->slug),
-                'placeholder' => esc_html__('Which plugin?', $this->client->slug),
+                'title'       => esc_html__('Found a better plugin', TelemetryConfig::getSlug()),
+                'placeholder' => esc_html__('Which plugin?', TelemetryConfig::getSlug()),
             ],
             'missing_specific_feature' => [
-                'title'       => esc_html__('Missing a specific feature', $this->client->slug),
-                'placeholder' => esc_html__('Could you tell us more about that feature?', $this->client->slug),
+                'title'       => esc_html__('Missing a specific feature', TelemetryConfig::getSlug()),
+                'placeholder' => esc_html__('Could you tell us more about that feature?', TelemetryConfig::getSlug()),
             ],
             'not_working' => [
-                'title'       => esc_html__('Not working', $this->client->slug),
-                'placeholder' => esc_html__('Could you tell us what is not working?', $this->client->slug),
+                'title'       => esc_html__('Not working', TelemetryConfig::getSlug()),
+                'placeholder' => esc_html__('Could you tell us what is not working?', TelemetryConfig::getSlug()),
             ],
             'not_working_as_expected' => [
-                'title'       => esc_html__('Not working as expected', $this->client->slug),
-                'placeholder' => esc_html__('Could you tell us what do you expect?', $this->client->slug),
+                'title'       => esc_html__('Not working as expected', TelemetryConfig::getSlug()),
+                'placeholder' => esc_html__('Could you tell us what do you expect?', TelemetryConfig::getSlug()),
             ],
             'temporary_deactivation' => [
-                'title'       => esc_html__('It\'s a temporary deactivation', $this->client->slug),
+                'title'       => esc_html__('It\'s a temporary deactivation', TelemetryConfig::getSlug()),
                 'placeholder' => '',
             ],
-            $this->client->prefix . 'pro' => [
-                'title'       => esc_html__('I have ' . $this->client->title . ' Pro', $this->client->slug),
+            TelemetryConfig::getPrefix() . 'pro' => [
+                'title'       => esc_html__('I have ' . TelemetryConfig::getTitle() . ' Pro', TelemetryConfig::getSlug()),
                 'placeholder' => '',
-                'alert'       => esc_html__('Wait! Don\'t deactivate ' . $this->client->title . '. You have to activate both ' . $this->client->title . ' and ' . $this->client->title . ' Pro in order to work the plugin.', $this->client->slug),
+                'alert'       => esc_html__('Wait! Don\'t deactivate ' . TelemetryConfig::getTitle() . '. You have to activate both ' . TelemetryConfig::getTitle() . ' and ' . TelemetryConfig::getTitle() . ' Pro in order to work the plugin.', TelemetryConfig::getSlug()),
             ],
             'other' => [
-                'title'       => esc_html__('Other', $this->client->slug),
-                'placeholder' => esc_html__('Please share the reason', $this->client->slug),
+                'title'       => esc_html__('Other', TelemetryConfig::getSlug()),
+                'placeholder' => esc_html__('Please share the reason', TelemetryConfig::getSlug()),
             ],
         ];
 
-        return apply_filters($this->client->prefix . 'deactivate_reasons', $reasons, $this->client);
+        return apply_filters(TelemetryConfig::getPrefix() . 'deactivate_reasons', $reasons);
     }
 
     /**
@@ -119,7 +111,7 @@ class Feedback
             return;
         }
 
-        if (!wp_verify_nonce(sanitize_key(wp_unslash($_POST['_ajax_nonce'])), $this->client->prefix . 'nonce')) {
+        if (!wp_verify_nonce(sanitize_key(wp_unslash($_POST['_ajax_nonce'])), TelemetryConfig::getPrefix() . 'nonce')) {
             wp_send_json_error('Nonce verification failed');
         }
 
@@ -127,12 +119,12 @@ class Feedback
             wp_send_json_error('Permission denied');
         }
 
-        $report = $this->client->report->getTrackingData();
+        $report = [];
         $report['site_lang'] = get_bloginfo('language');
         $report['feedback_key'] = sanitize_text_field(wp_unslash($_POST['reason_key'])) ?: null;
         $report['feedback'] = sanitize_text_field(wp_unslash($_POST["reason_{$report['feedback_key']}"])) ?: null;
 
-        $this->client->sendReport('deactivate-reason', $report);
+        Telemetry::sendReport('deactivate-reason', $report);
 
         wp_send_json_success();
     }
