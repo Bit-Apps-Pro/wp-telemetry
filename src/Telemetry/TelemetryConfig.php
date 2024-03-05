@@ -80,7 +80,7 @@ class TelemetryConfig
 
     public static function setServerBaseUrl($url)
     {
-        self::$serverBaseUrl = trailingslashit($url);
+        self::$serverBaseUrl = $url;
     }
 
     public static function getServerBaseUrl()

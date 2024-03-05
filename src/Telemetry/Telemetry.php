@@ -43,7 +43,7 @@ class Telemetry
 
     public static function sendReport($route, $data, $blocking = false)
     {
-        $apiUrl = TelemetryConfig::getServerBaseUrl() . $route;
+        $apiUrl = trailingslashit(TelemetryConfig::getServerBaseUrl()) . $route;
 
         $headers = [
             'host-user'    => 'BitApps/' . md5(esc_url(home_url())),
