@@ -2,8 +2,6 @@
 
 namespace BitApps\WPTelemetry\Telemetry\Report;
 
-use BitApps\Pi\Config;
-
 class ReportInfo
 {
     /**
@@ -212,10 +210,11 @@ class ReportInfo
      * Get plugin info
      *
      * @param mixed $activePlugins
+     * @param string $slug
      *
      * @return array
      */
-    public function getPluginInfo($activePlugins)
+    public function getPluginInfo($activePlugins, $slug)
     {
         $pluginInfo = [];
 
@@ -232,8 +231,8 @@ class ReportInfo
             ];
         }
 
-        if (\array_key_exists(Config::SLUG, $pluginInfo)) {
-            unset($pluginInfo[Config::SLUG]);
+        if (\array_key_exists($slug, $pluginInfo)) {
+            unset($pluginInfo[$slug]);
         }
 
         return $pluginInfo;

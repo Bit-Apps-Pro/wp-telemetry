@@ -215,7 +215,7 @@ class Report
         ];
 
         if ($this->addPluginData) {
-            $data['plugins'] = $reportInfo->getPluginInfo($allPlugins['activePlugins']);
+            $data['plugins'] = $reportInfo->getPluginInfo($allPlugins['activePlugins'], $this->client->slug);
         }
 
         if (\is_array($this->extraInfo) && !empty($this->extraInfo)) {
