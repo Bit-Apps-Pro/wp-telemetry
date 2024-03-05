@@ -78,7 +78,7 @@ class Report
             ),
             wp_get_current_user()->display_name,
             TelemetryConfig::getTitle(),
-            TelemetryConfig::getSlug(),
+            TelemetryConfig::getSlug()
         );
     }
 
