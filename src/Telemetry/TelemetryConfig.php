@@ -12,11 +12,11 @@ class TelemetryConfig
 
     private static $version;
 
-    private static $termsUrl = 'https://bitapps.pro/terms';
+    private static $termsUrl = '';
 
-    private static $policyUrl = 'https://bitapps.pro/privacy-policy';
+    private static $policyUrl = '';
 
-    private static $serverBaseUrl = 'https://wp-api.bitapps.pro/public/';
+    private static $serverBaseUrl = '';
 
     public static function setTitle($title)
     {

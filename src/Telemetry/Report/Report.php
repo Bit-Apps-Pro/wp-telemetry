@@ -7,8 +7,6 @@ use BitApps\WPTelemetry\Telemetry\TelemetryConfig;
 
 class Report
 {
-    private $extraInfo = [];
-
     private $addPluginData = false;
 
     public function init()
@@ -23,13 +21,6 @@ class Report
     public function addPluginData()
     {
         $this->addPluginData = true;
-
-        return $this;
-    }
-
-    public function addExtraInfo($data = [])
-    {
-        $this->extraInfo = $data;
 
         return $this;
     }
@@ -210,14 +201,12 @@ class Report
             $data['plugins'] = $reportInfo->getPluginInfo($allPlugins['activePlugins'], TelemetryConfig::getSlug());
         }
 
-        if (\is_array($this->extraInfo) && !empty($this->extraInfo)) {
-            $data['extra'] = $this->extraInfo;
-        }
-
         if (get_option(TelemetryConfig::getPrefix() . 'tracking_skipped')) {
             delete_option(TelemetryConfig::getPrefix() . 'tracking_skipped');
             $data['previously_skipped'] = true;
         }
+
+        $data['additional_data'] = apply_filters(TelemetryConfig::getPrefix() . 'tracker_additional_data', []);
 
         return apply_filters(TelemetryConfig::getPrefix() . 'tracker_data', $data);
     }

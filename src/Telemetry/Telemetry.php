@@ -46,7 +46,7 @@ class Telemetry
         $apiUrl = trailingslashit(TelemetryConfig::getServerBaseUrl()) . $route;
 
         $headers = [
-            'host-user'    => 'BitApps/' . md5(esc_url(home_url())),
+            'host-user'    => md5(esc_url(home_url())),
             'Content-Type' => 'application/json',
         ];
 

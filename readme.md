@@ -22,6 +22,7 @@ function initialize_telemetry_client() {
   TelemetryConfig::setTitle($slug);
   TelemetryConfig::setPrefix($prefix);
   TelemetryConfig::setVersion($version);
+  TelemetryConfig::setServerBaseUrl( 'https://api.example.com/' );
 
   // initialize tracking and reporting
   Telemetry::report()->init();
@@ -41,12 +42,6 @@ All the configuration should be done in the `initialize_telemetry_client()` func
 
 ### # Telemetry Client Config
 
-Set custom server URL
-
-```php
-TelemetryConfig::setServerBaseUrl( 'https://example.com' );
-```
-
 Set custom terms URL
 
 ```php
@@ -59,7 +54,7 @@ Set custom privacy policy URL
 TelemetryConfig::setPolicyUrl( 'https://example.com/privacy' );
 ```
 
-### # Tracking Report Config
+### # Tracking Report Modify
 
 Add plugin information in tracking data
 
@@ -69,14 +64,32 @@ TelemetryConfig::report()
                 ->init();
 ```
 
-Add extra information in tracking data
+Add additional data in tracking data
 
 ```php
-TelemetryConfig::report()
-                ->addExtraInfo([
-                  'my_plugin_logs' => Log::get(),
-                ])
-                ->init();
+$plugin_prefix = 'my_plugin_prefix_';
+
+add_filter($plugin_prefix . 'tracking_additional_data', function($additional_data) {
+
+  // example: add custom data
+  $additional_data['my_custom_data'] = 'My Custom Data';
+
+  return $additional_data;
+});
+```
+
+Filter tracking data before sending
+
+```php
+$plugin_prefix = 'my_plugin_prefix_';
+
+add_filter($plugin_prefix . 'tracking_data', function($tracking_data) {
+
+  // example: remove some data
+  unset($tracking_data['some_data']);
+
+  return $tracking_data;
+});
 ```
 
 ### # Deactivate Feedback Config
