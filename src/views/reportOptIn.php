@@ -6,8 +6,13 @@
 	</p>
 
 	<div style="margin-bottom: 15px;">
+		<?php if ($args['termsUrl'] !== '') { ?>
 		<a href="<?php echo esc_attr($args['termsUrl']); ?>" style="text-decoration: none;">Terms of service</a> &nbsp; &nbsp;
-		<a href="<?php echo esc_attr($args['policyUrl']); ?>" style="text-decoration: none;">Privacy Policy</a>
+		<?php } ?>
+
+		<?php if ($args['policyUrl'] !== '') { ?>
+			<a href="<?php echo esc_attr($args['policyUrl']); ?>" style="text-decoration: none;">Privacy Policy</a>
+		<?php } ?>
 	</div>
 
 	<div>
