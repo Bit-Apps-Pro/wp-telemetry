@@ -206,9 +206,9 @@ class Report
             $data['previously_skipped'] = true;
         }
 
-        $data['additional_data'] = apply_filters(TelemetryConfig::getPrefix() . 'tracker_additional_data', []);
+        $data['additional_data'] = apply_filters(TelemetryConfig::getPrefix() . 'telemetry_additional_data', []);
 
-        return apply_filters(TelemetryConfig::getPrefix() . 'tracker_data', $data);
+        return apply_filters(TelemetryConfig::getPrefix() . 'telemetry_data', $data);
     }
 
     protected function dataWeCollect()
