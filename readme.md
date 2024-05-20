@@ -14,7 +14,7 @@ composer require bitapps/wp-telemetry
 
 ### 2. Create a Telemetry Client
 
-Initialize the telemetry client in your plugin.
+Initialize the telemetry client in your plugin's bootstrap file.
 
 ```php
 function initialize_telemetry_client() {
@@ -23,6 +23,9 @@ function initialize_telemetry_client() {
   TelemetryConfig::setPrefix($prefix);
   TelemetryConfig::setVersion($version);
   TelemetryConfig::setServerBaseUrl( 'https://api.example.com/' );
+
+  TelemetryConfig::setTermsUrl( 'https://example.com/terms' ); // optional
+  TelemetryConfig::setPolicyUrl( 'https://example.com/privacy' ); // optional
 
   // initialize tracking and reporting
   Telemetry::report()->init();
@@ -40,20 +43,6 @@ You are good to go! The telemetry client will start sending data to the default 
 
 All the configuration should be done in the `initialize_telemetry_client()` function.
 
-### # Telemetry Client Config
-
-Set custom terms URL
-
-```php
-TelemetryConfig::setTermsUrl( 'https://example.com/terms' );
-```
-
-Set custom privacy policy URL
-
-```php
-TelemetryConfig::setPolicyUrl( 'https://example.com/privacy' );
-```
-
 ### # Tracking Report Modify
 
 Add plugin information in tracking data
@@ -64,12 +53,14 @@ TelemetryConfig::report()
                 ->init();
 ```
 
-Add additional data in tracking data
+**Filter Hook to Add Additional Data :**
+
+This filter allows adding additional data to track information used by the plugin. You can modify the `additional_data` array to include any custom data needed.
 
 ```php
 $plugin_prefix = 'my_plugin_prefix_';
 
-add_filter($plugin_prefix . 'tracking_additional_data', function($additional_data) {
+add_filter($plugin_prefix . 'telemetry_additional_data', function($additional_data) {
 
   // example: add custom data
   $additional_data['my_custom_data'] = 'My Custom Data';
@@ -78,17 +69,22 @@ add_filter($plugin_prefix . 'tracking_additional_data', function($additional_dat
 });
 ```
 
-Filter tracking data before sending
+**Filter Hook To Modify Telemetry Data :**
+
+This filter allows modification of the telemetry data array before it is sent.
 
 ```php
 $plugin_prefix = 'my_plugin_prefix_';
 
-add_filter($plugin_prefix . 'tracking_data', function($tracking_data) {
+add_filter($plugin_prefix . 'telemetry_data', function($telemetry_data) {
 
   // example: remove some data
-  unset($tracking_data['some_data']);
+  unset($telemetry_data['some_data']);
 
-  return $tracking_data;
+  // example: add custom data
+  $telemetry_data['my_custom_data'] = 'My Custom Data';
+
+  return $telemetry_data;
 });
 ```
 
