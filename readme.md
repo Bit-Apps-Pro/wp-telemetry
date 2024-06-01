@@ -60,6 +60,12 @@ Telemetry::report()->trackingOptIn();
 Telemetry::report()->trackingOptOut();
 ```
 
+**⚡️ Check if tracking is enabled**
+
+```php
+Telemetry::report()->isTrackingAllowed();
+```
+
 ### # Tracking Report Modify
 
 **⚡️ Filter Hook to Add Additional Data :**
