@@ -238,6 +238,9 @@ class Report
         }
 
         $data = [
+            'url'                => esc_url(home_url()),
+            'plugin_slug'        => TelemetryConfig::getPrefix(),
+            'plugin_version'     => TelemetryConfig::getversion(),
             'skipped'            => true,
             'previously_skipped' => $previouslySkipped,
         ];
