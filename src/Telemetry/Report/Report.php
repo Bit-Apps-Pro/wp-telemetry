@@ -83,15 +83,19 @@ class Report
             return;
         }
 
-        if (isset($_GET[TelemetryConfig::getPrefix() . 'tracking_opt_in']) && $_GET[TelemetryConfig::getPrefix() . 'tracking_opt_in'] === 'true') {
+        $optInKey = TelemetryConfig::getPrefix() . 'tracking_opt_in';
+
+        if (isset($_GET[$optInKey]) && $_GET[$optInKey] === 'true') {
             $this->trackingOptIn();
-            wp_safe_redirect(remove_query_arg(TelemetryConfig::getPrefix() . 'tracking_opt_in'));
+            wp_safe_redirect(remove_query_arg($optInKey));
             exit;
         }
 
-        if (isset($_GET[TelemetryConfig::getPrefix() . 'tracking_opt_out'], $_GET[TelemetryConfig::getPrefix() . 'tracking_opt_out']) && $_GET[TelemetryConfig::getPrefix() . 'tracking_opt_out'] === 'true') {
+        $optOutKey = TelemetryConfig::getPrefix() . 'tracking_opt_out';
+
+        if (isset($_GET[$optOutKey]) && $_GET[$optOutKey] === 'true') {
             $this->trackingOptOut();
-            wp_safe_redirect(remove_query_arg(TelemetryConfig::getPrefix() . 'tracking_opt_out'));
+            wp_safe_redirect(remove_query_arg($optOutKey));
             exit;
         }
     }
@@ -105,7 +109,7 @@ class Report
         $this->scheduleEvent();
         $this->sendTrackingReport();
 
-        do_action(TelemetryConfig::getPrefix() . 'tracking_opt_in', $this->getTrackingData());
+        do_action(TelemetryConfig::getPrefix() . 'tracking_opt_in');
     }
 
     public function trackingOptOut()
@@ -114,7 +118,6 @@ class Report
         update_option(TelemetryConfig::getPrefix() . 'tracking_notice_dismissed', true);
 
         $this->trackingSkippedRequest();
-
         $this->clearScheduleEvent();
 
         do_action(TelemetryConfig::getPrefix() . 'tracking_opt_out');
