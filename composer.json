@@ -43,7 +43,8 @@
   "require-dev": {
     "pestphp/pest": "3.x-dev",
     "squizlabs/php_codesniffer": "*",
-    "phpcompatibility/php-compatibility": "*"
+    "phpcompatibility/php-compatibility": "*",
+    "friendsofphp/php-cs-fixer": "dev-master"
   },
   "minimum-stability": "dev",
   "config": {
