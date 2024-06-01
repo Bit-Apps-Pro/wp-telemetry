@@ -40,7 +40,7 @@ initialize_telemetry_client();
 
 **You are good to go! 👍️**
 
-The telemetry client will start sending data to your configured api base url.
+The telemetry client will start sending data `weekly` to your configured server url.
 
 ## Configuration
 
@@ -73,12 +73,6 @@ Telemetry::report()->isTrackingAllowed();
 This filter allows adding additional data to track information used by the plugin. You can modify the `additional_data` array to include any custom data needed.
 
 ```php
-apply_filters($plugin_prefix . 'telemetry_additional_data', $additional_data);
-```
-
-**Usage**
-
-```php
 add_filter($plugin_prefix . 'telemetry_additional_data', 'customize_additional_data', 10, 1);
 
 function customize_additional_data($additional_data)
@@ -91,12 +85,6 @@ function customize_additional_data($additional_data)
 **⚡️ Filter Hook To Modify Telemetry Data :**
 
 This filter allows modification of the telemetry data array before it is sent.
-
-```php
-apply_filters($plugin_prefix . 'telemetry_data', $telemetry_data);
-```
-
-**Usage**
 
 ```php
 add_filter($plugin_prefix . 'telemetry_data', 'customize_telemetry_data', 10, 1);
@@ -121,12 +109,6 @@ TelemetryConfig::report()
 **⚡️ Filter Hook to Add Deactivate Reasons :**
 
 This filter allows adding additional deactivate reasons to the feedback survey. You can modify the `deactivate_reasons` array to include any custom reasons needed.
-
-```php
-apply_filters($plugin_prefix . 'deactivate_reasons', $deactivate_reasons);
-```
-
-**Usage**
 
 ```php
 
