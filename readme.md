@@ -19,20 +19,17 @@ Initialize the telemetry client in your plugin's bootstrap file.
 ```php
 function initialize_telemetry_client()
 {
-  TelemetryConfig::setSlug($title);
-  TelemetryConfig::setTitle($slug);
-  TelemetryConfig::setPrefix($prefix);
-  TelemetryConfig::setVersion($version);
+  TelemetryConfig::setTitle($title);
+  TelemetryConfig::setSlug($plugin_slug);
+  TelemetryConfig::setPrefix($plugin_prefix);
+  TelemetryConfig::setVersion($plugin_version);
 
   TelemetryConfig::setServerBaseUrl( 'https://api.example.com/' );
   TelemetryConfig::setTermsUrl( 'https://example.com/terms/' ); // (optional)
   TelemetryConfig::setPolicyUrl( 'https://example.com/privacy/' ); // (optional)
 
-  // initialize tracking and reporting
-  Telemetry::report()->init();
-
-  // initialize deactivation feedback survey
-  Telemetry::feedback()->init();
+  Telemetry::report()->init(); // initialize telemetry tracking
+  Telemetry::feedback()->init(); // initialize deactivation feedback survey
 }
 
 initialize_telemetry_client();
@@ -84,7 +81,7 @@ function customize_additional_data($additional_data)
 
 **⚡️ Filter Hook To Modify Telemetry Data :**
 
-This filter allows modification of the telemetry data array before it is sent.
+This filter allows modifying the telemetry data before sending it to the server. You can modify the `$telemetry_data` array to include any custom data needed.
 
 ```php
 add_filter($plugin_prefix . 'telemetry_data', 'customize_telemetry_data', 10, 1);
