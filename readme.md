@@ -1,6 +1,6 @@
 # WP Telemetry
 
-A simple telemetry library for WordPress. It allows you to send telemetry data to a remote server. It is designed to be simple and easy to use.
+This package provides a simple way to add telemetry tracking to your WordPress plugin. It sends weekly reports to your server with information about the plugin's usage.
 
 ## Usage
 
