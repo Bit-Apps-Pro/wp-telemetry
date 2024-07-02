@@ -96,7 +96,7 @@ function customize_telemetry_data($telemetry_data)
 **⚡️ Add plugin information in tracking data**
 
 ```php
-TelemetryConfig::report()
+Telemetry::report()
                 ->addPluginData()
                 ->init();
 ```
